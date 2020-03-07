@@ -31,7 +31,7 @@ namespace LR1_OOP
         {
             InitializeComponent();
             ObservableCollection<string> comboItems = new ObservableCollection<string>();
-            cmbShapes.ItemsSource = comboItems;
+            comboShapes.ItemsSource = comboItems;
             comboItems.Add("Линия");
             comboItems.Add("Прямоугольник");
             comboItems.Add("Эллипс");
@@ -50,7 +50,7 @@ namespace LR1_OOP
             if (colorPicker.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 System.Drawing.Color color = colorPicker.Color;
-                list.Shapes[cmbShapes.SelectedIndex].StrokeBrush = new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));      
+                list.Shapes[comboShapes.SelectedIndex].StrokeBrush = new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));      
             }
         }
 
@@ -60,13 +60,13 @@ namespace LR1_OOP
             if (colorPicker.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 System.Drawing.Color color = colorPicker.Color;
-                list.Shapes[cmbShapes.SelectedIndex].FillBrush = new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
+                list.Shapes[comboShapes.SelectedIndex].FillBrush = new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
             }
         }
 
         private void btnDraw_Click(object sender, RoutedEventArgs e)
         {
-            list.Shapes[cmbShapes.SelectedIndex].Draw(cnvField);
+            list.Shapes[comboShapes.SelectedIndex].Draw(canvasField);
         }
 
         private void tbStrokeWidth_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -81,7 +81,7 @@ namespace LR1_OOP
 
         private void tbStrokeWidth_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if ((e.Key == Key.Enter) || (e.Key == Key.Tab))
             {
                 var text = tbStrokeWidth.Text;
                 text = text.Replace(".", ",");
@@ -91,7 +91,7 @@ namespace LR1_OOP
 
                 if (matches)
                 {
-                    list.Shapes[cmbShapes.SelectedIndex].StrokeWidth = double.Parse(text);
+                    list.Shapes[comboShapes.SelectedIndex].StrokeWidth = double.Parse(text);
                 }
                 else
                 {

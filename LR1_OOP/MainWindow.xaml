@@ -21,7 +21,7 @@
             Grid.Row="0"
             Background="#FFE5E5E5" >
             <ComboBox
-                Name="cmbShapes"
+                Name="comboShapes"
                 DockPanel.Dock="Left"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
@@ -87,7 +87,7 @@
                 Width="100" />
         </DockPanel>
         <Canvas
-            Name="cnvField"
+            Name="canvasField"
             Grid.Row="1" />
     </Grid>
 </Window>
