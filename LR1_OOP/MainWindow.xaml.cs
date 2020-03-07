@@ -37,11 +37,11 @@ namespace LR1_OOP
             comboItems.Add("Эллипс");
             defaultColor = Colors.Black;
             defaultStrWidth = 7;
-            tbStrokeWidth.Text = defaultStrWidth.ToString();
             list = new NShapeList();
             list.Shapes.Add(new NLine(defaultStrWidth, Colors.Aquamarine, Colors.Transparent, new Point(56, 345), new Point(467, 475)));
             list.Shapes.Add(new NRectangle(defaultStrWidth, Colors.Coral, Colors.DarkSlateGray, new Point(10, 10), new Point(200, 200)));
             list.Shapes.Add(new NEllipse(defaultStrWidth, Colors.Red, Colors.Red, new Point(400, 400), new Point(600, 600)));
+            slStrWidth.Value = defaultStrWidth;
         }
 
         private void btnStrokeColor_Click(object sender, RoutedEventArgs e)
@@ -69,36 +69,10 @@ namespace LR1_OOP
             list.Shapes[comboShapes.SelectedIndex].Draw(canvasField);
         }
 
-        private void tbStrokeWidth_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void slStrWidth_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            var matches = Regex.IsMatch(e.Text, @"[,\.0-9]", RegexOptions.IgnoreCase);
-            
-            if(!matches)
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void tbStrokeWidth_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if ((e.Key == Key.Enter) || (e.Key == Key.Tab))
-            {
-                var text = tbStrokeWidth.Text;
-                text = text.Replace(".", ",");
-                tbStrokeWidth.Text = text;
-                tbStrokeWidth.SelectionStart = tbStrokeWidth.Text.Length;
-                var matches = Regex.IsMatch(text, @"^([0-9])+((\,)([0-9])+)?$", RegexOptions.IgnoreCase);
-
-                if (matches)
-                {
-                    list.Shapes[comboShapes.SelectedIndex].StrokeWidth = double.Parse(text);
-                }
-                else
-                {
-                    System.Windows.MessageBox.Show("Неверный ввод", "Ошибка при вводе значения", MessageBoxButton.OK, MessageBoxImage.Error);
-                    tbStrokeWidth.Text = defaultStrWidth.ToString();
-                }
-            }
+            slStrWidth.Value = Math.Round(slStrWidth.Value, 2);
+            list.Shapes[comboShapes.SelectedIndex].StrokeWidth = Math.Round(slStrWidth.Value, 2);
         }
     }
 

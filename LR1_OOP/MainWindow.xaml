@@ -66,15 +66,25 @@
                 HorizontalAlignment="Left" 
                 VerticalAlignment="Center"
                 Margin="16,0,0,0"/>
-            <TextBox 
-                Name="tbStrokeWidth"
-                TextWrapping="NoWrap"
+            <Slider
+                Name="slStrWidth"
+                Width="100"
                 Margin="8,0,0,0" 
                 HorizontalAlignment="Left" 
                 VerticalAlignment="Center"
-                Width="100"
-                PreviewTextInput="tbStrokeWidth_PreviewTextInput"
-                KeyDown="tbStrokeWidth_KeyDown">
+                Minimum="0"
+                Maximum="32"
+                ValueChanged="slStrWidth_ValueChanged">
+            </Slider>
+            <TextBox 
+                Name="tbStrWidth"
+                Text="{Binding ElementName=slStrWidth, Path=Value, UpdateSourceTrigger=PropertyChanged}"
+                TextWrapping="NoWrap"
+                Margin="8,0,0,0" 
+                TextAlignment="Right"
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Center"
+                Width="35">
             </TextBox>
             <Button 
                 Name="btnDraw"
