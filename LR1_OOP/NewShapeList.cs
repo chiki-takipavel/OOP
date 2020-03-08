@@ -9,11 +9,11 @@ namespace LR1_OOP
 {
     public class NShapeList
     {
-        public List<NShape> Shapes { get; set; }
+        public List<NewShape> Shapes { get; set; }
 
         public NShapeList()
         {
-            Shapes = new List<NShape>();
+            Shapes = new List<NewShape>();
         }
 
         public void Draw(Canvas canvas)
