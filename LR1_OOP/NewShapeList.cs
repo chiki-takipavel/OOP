@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace LR1_OOP
 {
