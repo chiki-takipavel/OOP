@@ -8,22 +8,22 @@ using System.Windows.Shapes;
 
 namespace LR1_OOP
 {
-    public class NLine : NShape
+    public class NewLine : NewShape
     {
         private Point startPoint;
         private Point endPoint;
 
-        public NLine()
+        public NewLine()
         {
         }
 
-        public NLine(double strokeWidth, Color strokeColor, Color fillColor, Point startPoint, Point endPoint) : base (strokeWidth, strokeColor, fillColor)
+        public NewLine(double strokeWidth, Color strokeColor, Color fillColor, Point startPoint, Point endPoint) : base (strokeWidth, strokeColor, fillColor)
         {
             this.startPoint = startPoint;
             this.endPoint = endPoint;
         }
 
-        public NLine(double strokeWidth, SolidColorBrush strokeColor, SolidColorBrush fillColor, Point startPoint, Point endPoint) : base(strokeWidth, strokeColor, fillColor)
+        public NewLine(double strokeWidth, SolidColorBrush strokeColor, SolidColorBrush fillColor, Point startPoint, Point endPoint) : base(strokeWidth, strokeColor, fillColor)
         {
             this.startPoint = startPoint;
             this.endPoint = endPoint;

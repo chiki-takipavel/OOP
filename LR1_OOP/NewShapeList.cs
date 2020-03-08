@@ -7,11 +7,11 @@ using System.Windows.Media;
 
 namespace LR1_OOP
 {
-    public class NShapeList
+    public class NewShapeList
     {
         public List<NewShape> Shapes { get; set; }
 
-        public NShapeList()
+        public NewShapeList()
         {
             Shapes = new List<NewShape>();
         }

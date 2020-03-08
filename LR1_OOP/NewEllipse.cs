@@ -8,22 +8,22 @@ using System.Windows.Shapes;
 
 namespace LR1_OOP
 {
-    class NEllipse : NShape
+    class NewEllipse : NewShape
     {
         private Point startPoint;
         private Point endPoint;
 
-        public NEllipse()
+        public NewEllipse()
         {
         }
 
-        public NEllipse(double strokeWidth, Color strokeColor, Color fillColor, Point startPoint, Point endPoint) : base(strokeWidth, strokeColor, fillColor)
+        public NewEllipse(double strokeWidth, Color strokeColor, Color fillColor, Point startPoint, Point endPoint) : base(strokeWidth, strokeColor, fillColor)
         {
             this.startPoint = startPoint;
             this.endPoint = endPoint;
         }
 
-        public NEllipse(double strokeWidth, SolidColorBrush strokeColor, SolidColorBrush fillColor, Point startPoint, Point endPoint) : base(strokeWidth, strokeColor, fillColor)
+        public NewEllipse(double strokeWidth, SolidColorBrush strokeColor, SolidColorBrush fillColor, Point startPoint, Point endPoint) : base(strokeWidth, strokeColor, fillColor)
         {
             this.startPoint = startPoint;
             this.endPoint = endPoint;

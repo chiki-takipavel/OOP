@@ -8,22 +8,22 @@ using System.Windows.Shapes;
 
 namespace LR1_OOP
 {
-    class NRectangle : NShape
+    class NewRectangle : NewShape
     {
         private Point startPoint;
         private Point endPoint;
 
-        public NRectangle()
+        public NewRectangle()
         {
         }
 
-        public NRectangle(double strokeWidth, Color strokeColor, Color fillColor, Point startPoint, Point endPoint) : base(strokeWidth, strokeColor, fillColor)
+        public NewRectangle(double strokeWidth, Color strokeColor, Color fillColor, Point startPoint, Point endPoint) : base(strokeWidth, strokeColor, fillColor)
         {
             this.startPoint = startPoint;
             this.endPoint = endPoint;
         }
 
-        public NRectangle(double strokeWidth, SolidColorBrush strokeColor, SolidColorBrush fillColor, Point startPoint, Point endPoint) : base(strokeWidth, strokeColor, fillColor)
+        public NewRectangle(double strokeWidth, SolidColorBrush strokeColor, SolidColorBrush fillColor, Point startPoint, Point endPoint) : base(strokeWidth, strokeColor, fillColor)
         {
             this.startPoint = startPoint;
             this.endPoint = endPoint;

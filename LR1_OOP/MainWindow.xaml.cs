@@ -14,7 +14,7 @@ namespace LR1_OOP
         Color defaultStrColor;
         Color defaultFillColor;
         double defaultStrWidth;
-        NShapeList list;
+        NewShapeList list;
 
         public MainWindow()
         {
@@ -29,10 +29,10 @@ namespace LR1_OOP
             comboItems.Add("Прямоугольник");
             comboItems.Add("Эллипс");
 
-            list = new NShapeList();
-            list.Shapes.Add(new NLine(defaultStrWidth, defaultStrColor, defaultFillColor, new Point(56, 345), new Point(467, 475)));
-            list.Shapes.Add(new NRectangle(defaultStrWidth, defaultStrColor, defaultFillColor, new Point(10, 10), new Point(200, 200)));
-            list.Shapes.Add(new NEllipse(defaultStrWidth, defaultStrColor, defaultFillColor, new Point(400, 400), new Point(600, 600)));
+            list = new NewShapeList();
+            list.Shapes.Add(new NewLine(defaultStrWidth, defaultStrColor, defaultFillColor, new Point(56, 345), new Point(467, 475)));
+            list.Shapes.Add(new NewRectangle(defaultStrWidth, defaultStrColor, defaultFillColor, new Point(10, 10), new Point(200, 200)));
+            list.Shapes.Add(new NewEllipse(defaultStrWidth, defaultStrColor, defaultFillColor, new Point(400, 400), new Point(600, 600)));
 
             slidStrWidth.Value = defaultStrWidth;
             rectStrokeColor.Fill = new SolidColorBrush(defaultStrColor);

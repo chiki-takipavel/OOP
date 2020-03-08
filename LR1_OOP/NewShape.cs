@@ -6,25 +6,25 @@ using System.Windows.Media;
 
 namespace LR1_OOP
 {
-    public abstract class NShape
+    public abstract class NewShape
     {
         private double strokeWidth;
         private SolidColorBrush strokeBrush;
         private SolidColorBrush fillBrush;
 
-        public NShape()
+        public NewShape()
         {
             
         }
 
-        public NShape(double sWidth, Color sColor, Color fColor)
+        public NewShape(double sWidth, Color sColor, Color fColor)
         {
             strokeWidth = sWidth;
             strokeBrush = new SolidColorBrush(sColor);
             fillBrush = new SolidColorBrush(fColor);
         }
 
-        public NShape(double sWidth, SolidColorBrush sColor, SolidColorBrush fColor)
+        public NewShape(double sWidth, SolidColorBrush sColor, SolidColorBrush fColor)
         {
             strokeWidth = sWidth;
             strokeBrush = sColor;
