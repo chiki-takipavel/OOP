@@ -11,17 +11,17 @@ namespace LR1_OOP
     /// </summary>
     public partial class MainWindow : Window
     {
-        Color defaultStrColor;
-        Color defaultFillColor;
-        double defaultStrWidth;
+        SolidColorBrush brushStroke;
+        SolidColorBrush brushFill;
+        double widthStroke;
         NewShapeList list;
 
         public MainWindow()
         {
             InitializeComponent();
-            defaultStrColor = Colors.Black;
-            defaultFillColor = Colors.White;
-            defaultStrWidth = 7;
+            brushStroke = new SolidColorBrush(Colors.Black);
+            brushFill = new SolidColorBrush(Colors.White);
+            widthStroke = 7;
 
             ObservableCollection<string> comboItems = new ObservableCollection<string>();
             cmbShapes.ItemsSource = comboItems;
@@ -30,13 +30,13 @@ namespace LR1_OOP
             comboItems.Add("Эллипс");
 
             list = new NewShapeList();
-            list.Shapes.Add(new NewLine(defaultStrWidth, defaultStrColor, defaultFillColor, new Point(56, 345), new Point(467, 475)));
-            list.Shapes.Add(new NewRectangle(defaultStrWidth, defaultStrColor, defaultFillColor, new Point(10, 10), new Point(200, 200)));
-            list.Shapes.Add(new NewEllipse(defaultStrWidth, defaultStrColor, defaultFillColor, new Point(400, 400), new Point(600, 600)));
+            list.Shapes.Add(new NewLine(widthStroke, brushStroke, brushFill, new Point(56, 345), new Point(467, 475)));
+            list.Shapes.Add(new NewRectangle(widthStroke, brushStroke, brushFill, new Point(10, 10), new Point(200, 200)));
+            list.Shapes.Add(new NewEllipse(widthStroke, brushStroke, brushFill, new Point(400, 400), new Point(600, 600)));
 
-            slidStrWidth.Value = defaultStrWidth;
-            rectStrokeColor.Fill = new SolidColorBrush(defaultStrColor);
-            rectFillColor.Fill = new SolidColorBrush(defaultFillColor);
+            slidStrWidth.Value = widthStroke;
+            rectStrokeColor.Fill = brushStroke;
+            rectFillColor.Fill = brushFill;
         }
 
         private void btnStrokeColor_Click(object sender, RoutedEventArgs e)
@@ -46,7 +46,7 @@ namespace LR1_OOP
             {
                 System.Drawing.Color color = colorPicker.Color;
                 SolidColorBrush brushColor = new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
-                list.Shapes[cmbShapes.SelectedIndex].StrokeBrush = brushColor;
+                brushStroke = brushColor;
                 rectStrokeColor.Fill = brushColor;
             }
         }
@@ -58,19 +58,22 @@ namespace LR1_OOP
             {
                 System.Drawing.Color color = colorPicker.Color;
                 SolidColorBrush brushColor = new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
-                list.Shapes[cmbShapes.SelectedIndex].FillBrush = brushColor;
+                brushFill = brushColor;
                 rectFillColor.Fill = brushColor;
             }
         }
 
         private void btnDraw_Click(object sender, RoutedEventArgs e)
         {
+            list.Shapes[cmbShapes.SelectedIndex].FillBrush = brushFill;
+            list.Shapes[cmbShapes.SelectedIndex].StrokeBrush = brushStroke;
+            list.Shapes[cmbShapes.SelectedIndex].StrokeWidth = widthStroke;
             list.Shapes[cmbShapes.SelectedIndex].Draw(canvasField);
         }
 
         private void slidStrWidth_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            list.Shapes[cmbShapes.SelectedIndex].StrokeWidth = slidStrWidth.Value;
+            widthStroke = slidStrWidth.Value;
         }
 
         private void itemExit_Click(object sender, RoutedEventArgs e)
