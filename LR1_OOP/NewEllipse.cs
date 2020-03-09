@@ -7,35 +7,16 @@ namespace LR1_OOP
 {
     class NewEllipse : NewShape
     {
-        private Point startPoint;
-        private Point endPoint;
-
         public NewEllipse()
         {
         }
 
-        public NewEllipse(double strokeWidth, Color strokeColor, Color fillColor, Point startPoint, Point endPoint) : base(strokeWidth, strokeColor, fillColor)
+        public NewEllipse(double strokeWidth, Color strokeColor, Color fillColor, PointCollection points) : base(strokeWidth, strokeColor, fillColor, points)
         {
-            this.startPoint = startPoint;
-            this.endPoint = endPoint;
         }
 
-        public NewEllipse(double strokeWidth, SolidColorBrush strokeColor, SolidColorBrush fillColor, Point startPoint, Point endPoint) : base(strokeWidth, strokeColor, fillColor)
+        public NewEllipse(double strokeWidth, SolidColorBrush strokeColor, SolidColorBrush fillColor, PointCollection points) : base(strokeWidth, strokeColor, fillColor, points)
         {
-            this.startPoint = startPoint;
-            this.endPoint = endPoint;
-        }
-
-        public Point StartPoint
-        {
-            get { return startPoint; }
-            set { startPoint = value; }
-        }
-
-        public Point EndPoint
-        {
-            get { return endPoint; }
-            set { endPoint = value; }
         }
 
         public override void Draw(Canvas canvas)
@@ -44,7 +25,7 @@ namespace LR1_OOP
             path.Stroke = StrokeBrush;
             path.Fill = FillBrush;
             path.StrokeThickness = StrokeWidth;
-            EllipseGeometry ellipse = new EllipseGeometry(new Rect(new Point(startPoint.X, startPoint.Y), new Point(endPoint.X, endPoint.Y)));
+            EllipseGeometry ellipse = new EllipseGeometry(new Rect(new Point(Points[0].X, Points[0].Y), new Point(Points[1].X, Points[1].Y)));
             path.Data = ellipse;
             canvas.Children.Add(path);
         }
