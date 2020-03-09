@@ -8,24 +8,27 @@ namespace LR1_OOP
         private double strokeWidth;
         private SolidColorBrush strokeBrush;
         private SolidColorBrush fillBrush;
+        private PointCollection points;
 
         public NewShape()
         {
             
         }
 
-        public NewShape(double sWidth, Color sColor, Color fColor)
+        public NewShape(double sWidth, Color sColor, Color fColor, PointCollection points)
         {
             strokeWidth = sWidth;
             strokeBrush = new SolidColorBrush(sColor);
             fillBrush = new SolidColorBrush(fColor);
+            this.points = new PointCollection(points);
         }
 
-        public NewShape(double sWidth, SolidColorBrush sColor, SolidColorBrush fColor)
+        public NewShape(double sWidth, SolidColorBrush sColor, SolidColorBrush fColor, PointCollection points)
         {
             strokeWidth = sWidth;
             strokeBrush = sColor;
             fillBrush = fColor;
+            this.points = new PointCollection(points);
         }
 
         public double StrokeWidth
@@ -44,6 +47,12 @@ namespace LR1_OOP
         {
             get { return fillBrush; }
             set { fillBrush = value; }
+        }
+
+        public PointCollection Points
+        {
+            get { return points; }
+            set { points = value; }
         }
 
         public abstract void Draw(Canvas canvas);
