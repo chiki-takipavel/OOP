@@ -12,7 +12,8 @@
         MinWidth="900"
         WindowStyle="SingleBorderWindow" 
         WindowStartupLocation="CenterScreen" >
-    <Grid>
+    <Grid
+        Name="gridMain">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="0.08*" />
@@ -49,8 +50,10 @@
                 Margin="16,0,0,0"
                 Width="160" 
                 SelectedIndex="0"
+                SelectionChanged="cmbShapes_SelectionChanged"
                 ItemsSource="{Binding comboItems}">
             </ComboBox>
+            
             <Label 
                 Content="Цвет контура:"
                 Margin="16,0,0,0"
@@ -73,6 +76,7 @@
                     VerticalAlignment="Center">
                 </Rectangle>
             </Button>
+            
             <Label 
                 Content="Цвет заливки:" 
                 HorizontalAlignment="Left" 
@@ -95,6 +99,7 @@
                     VerticalAlignment="Center">
                 </Rectangle>
             </Button>
+            
             <Label 
                 Content="Толщина контура:"  
                 HorizontalAlignment="Left" 
@@ -117,8 +122,27 @@
                 Margin="8,0,0,0" 
                 TextAlignment="Right" 
                 VerticalAlignment="Center"
-                Width="35">
+                Width="25">
             </TextBox>
+
+            <DockPanel
+                Name="panelCountPoints">
+                <Label 
+                    Content="Количество точек:"  
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Center"
+                    Margin="16,0,0,0"/>
+                <TextBox 
+                    Name="txtCountPoints"
+                    TextWrapping="NoWrap"
+                    Margin="8,0,0,0" 
+                    TextAlignment="Right" 
+                    VerticalAlignment="Center"
+                    Width="25"
+                    Text="{Binding Path=CountPoints, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}">
+                </TextBox>
+            </DockPanel>
+            
             <Button 
                 Name="btnDraw"
                 Content="Нарисовать"
@@ -127,10 +151,13 @@
                 HorizontalAlignment="Right" 
                 VerticalAlignment="Center" 
                 Width="100" />
+            
         </DockPanel>
         <Canvas
             Name="canvasField"
-            Grid.Row="2" >
+            Grid.Row="2"
+            Background="White"
+            MouseLeftButtonDown="canvasField_MouseLeftButtonDown">
         </Canvas>
     </Grid>
 </Window>
