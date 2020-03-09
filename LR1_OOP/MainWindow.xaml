@@ -13,7 +13,8 @@
         WindowStyle="SingleBorderWindow" 
         WindowStartupLocation="CenterScreen" >
     <Grid
-        Name="gridMain">
+        Name="gridMain"
+        KeyDown="gridMain_KeyDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="0.08*" />
@@ -36,8 +37,6 @@
                 Header="Редактировать" >
                 <MenuItem Header="Цвет контура" Click="btnStrokeColor_Click"/>
                 <MenuItem Header="Цвет заливки" Click="btnFillColor_Click"/>
-                <Separator />
-                <MenuItem Header="Нарисовать" Click="btnDraw_Click"/>
             </MenuItem>
         </Menu>
         <DockPanel
@@ -137,20 +136,19 @@
                     TextWrapping="NoWrap"
                     Margin="8,0,0,0" 
                     TextAlignment="Right" 
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Width="25"
-                    Text="{Binding Path=CountPoints, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}">
+                    TextChanged="txtCountPoints_TextChanged">
+                    <TextBox.Text>
+                        <Binding Path="CountPoints" Mode="TwoWay" ValidatesOnExceptions="True" UpdateSourceTrigger="PropertyChanged" >
+                            <Binding.ValidationRules>
+                                <local:RangeValidationRule MinValue="3" MaxValue="20" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
                 </TextBox>
             </DockPanel>
-
-            <Button 
-                Name="btnDraw"
-                Content="Нарисовать"
-                Click="btnDraw_Click"
-                Margin="0,0,16,0" 
-                HorizontalAlignment="Right" 
-                VerticalAlignment="Center" 
-                Width="100" />
 
         </DockPanel>
         <Canvas
