@@ -29,7 +29,5 @@ namespace LR1_OOP
             path.Data = ellipse;
             canvas.Children.Add(path);
         }
-
     }
-
 }

@@ -20,6 +20,7 @@ namespace LR1_OOP
             strokeWidth = sWidth;
             strokeBrush = new SolidColorBrush(sColor);
             fillBrush = new SolidColorBrush(fColor);
+            this.points = points;
         }
 
         public NewShape(double sWidth, SolidColorBrush sColor, SolidColorBrush fColor, PointCollection points)
@@ -27,6 +28,7 @@ namespace LR1_OOP
             strokeWidth = sWidth;
             strokeBrush = sColor;
             fillBrush = fColor;
+            this.points = points; 
         }
 
         public double StrokeWidth

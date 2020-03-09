@@ -19,6 +19,5 @@ namespace LR1_OOP
                 Shapes[i].Draw(canvas);
             }
         }
-
     }
 }
