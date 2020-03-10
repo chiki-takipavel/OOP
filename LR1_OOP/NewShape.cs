@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace LR1_OOP
@@ -20,15 +21,25 @@ namespace LR1_OOP
             strokeWidth = sWidth;
             strokeBrush = new SolidColorBrush(sColor);
             fillBrush = new SolidColorBrush(fColor);
-            this.points = points;
+            PointCollection tempList = new PointCollection();
+            foreach (Point point in points)
+            {
+                tempList.Add(point);
+            }
+            this.points = tempList;
         }
 
-        public NewShape(double sWidth, SolidColorBrush sColor, SolidColorBrush fColor, PointCollection points)
+        public NewShape(double sWidth, SolidColorBrush sBrush, SolidColorBrush fBrush, PointCollection points)
         {
             strokeWidth = sWidth;
-            strokeBrush = sColor;
-            fillBrush = fColor;
-            this.points = points; 
+            strokeBrush = sBrush;
+            fillBrush = fBrush;
+            PointCollection tempList = new PointCollection();
+            foreach (Point point in points)
+            {
+                tempList.Add(point);
+            }
+            this.points = tempList; 
         }
 
         public double StrokeWidth

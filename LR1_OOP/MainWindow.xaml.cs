@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.ComponentModel;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace LR1_OOP
 {
@@ -18,7 +20,8 @@ namespace LR1_OOP
         private double widthStroke;
         private PointCollection pointsList;
         private int countPoints;
-        private NewShapeList list;
+        private NewShapeList listShapes;
+        private List<Type> listShapesTypes;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -57,11 +60,17 @@ namespace LR1_OOP
             comboItems.Add("Эллипс");
             comboItems.Add("Многоугольник");
 
-            list = new NewShapeList();
-            list.Shapes.Add(new NewLine(widthStroke, brushStroke, brushFill, pointsList));
-            list.Shapes.Add(new NewRectangle(widthStroke, brushStroke, brushFill, pointsList));
-            list.Shapes.Add(new NewEllipse(widthStroke, brushStroke, brushFill, pointsList));
-            list.Shapes.Add(new NewPolygon(widthStroke, brushStroke, brushFill, pointsList));
+            listShapes = new NewShapeList();
+            listShapesTypes = new List<Type>();
+            listShapesTypes.Add(typeof(NewLine));
+            listShapesTypes.Add(typeof(NewRectangle));
+            listShapesTypes.Add(typeof(NewEllipse));
+            listShapesTypes.Add(typeof(NewPolygon));
+
+            /*listShapes.Shapes.Add(new NewLine(widthStroke, brushStroke, brushFill, pointsList));
+            listShapes.Shapes.Add(new NewRectangle(widthStroke, brushStroke, brushFill, pointsList));
+            listShapes.Shapes.Add(new NewEllipse(widthStroke, brushStroke, brushFill, pointsList));
+            listShapes.Shapes.Add(new NewPolygon(widthStroke, brushStroke, brushFill, pointsList));*/
 
             slidStrWidth.Value = widthStroke;
             rectStrokeColor.Fill = brushStroke;
@@ -97,11 +106,19 @@ namespace LR1_OOP
             pointsList.Add(e.GetPosition(canvasField));
             if (pointsList.Count == CountPoints)
             {
-                list.Shapes[cmbShapes.SelectedIndex].StrokeBrush = brushStroke;
-                list.Shapes[cmbShapes.SelectedIndex].FillBrush = brushFill;
-                list.Shapes[cmbShapes.SelectedIndex].StrokeWidth = widthStroke;
-                list.Shapes[cmbShapes.SelectedIndex].Points = pointsList;
-                list.Shapes[cmbShapes.SelectedIndex].Draw(canvasField);
+                Type shapeType = listShapesTypes[cmbShapes.SelectedIndex];
+                ConstructorInfo constructorInfo = shapeType.GetConstructor(new Type[] { typeof(double), typeof(SolidColorBrush), 
+                                                                                            typeof(SolidColorBrush), typeof(PointCollection) });
+                object objShape = constructorInfo.Invoke(new object[] { widthStroke, brushStroke, brushFill, pointsList });
+                MethodInfo methodInfo = shapeType.GetMethod("Draw");
+                object magicValue = methodInfo.Invoke(objShape, new object[] { canvasField });
+                Convert.ChangeType(objShape, shapeType);
+                listShapes.Shapes.Add((NewShape) objShape);
+                /*listShapes.Shapes[cmbShapes.SelectedIndex].StrokeBrush = brushStroke;
+                listShapes.Shapes[cmbShapes.SelectedIndex].FillBrush = brushFill;
+                listShapes.Shapes[cmbShapes.SelectedIndex].StrokeWidth = widthStroke;
+                listShapes.Shapes[cmbShapes.SelectedIndex].Points = pointsList;
+                listShapes.Shapes[cmbShapes.SelectedIndex].Draw(canvasField);*/
                 pointsList.Clear();
             }
         }
@@ -131,14 +148,19 @@ namespace LR1_OOP
             pointsList.Clear();
         }
 
-        private void gridMain_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void mainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control) && (e.Key == Key.Z))
             {
                 int canvasElemCount = canvasField.Children.Count;
+                int listShapesCount = listShapes.Shapes.Count;
                 if (canvasElemCount != 0)
                 {
                     canvasField.Children.RemoveAt(canvasElemCount - 1);
+                }
+                if (listShapesCount != 0)
+                {
+                    listShapes.Shapes.RemoveAt(listShapesCount - 1);
                 }
             }
         }
