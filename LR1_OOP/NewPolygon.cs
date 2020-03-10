@@ -26,12 +26,7 @@ namespace LR1_OOP
             polygon.Fill = FillBrush;
             polygon.FillRule = FillRule.Nonzero;
             polygon.StrokeThickness = StrokeWidth;
-            PointCollection tempList = new PointCollection();
-            foreach (Point point in Points)
-            {
-                tempList.Add(point);
-            }
-            polygon.Points = tempList;
+            polygon.Points = Points;
             canvas.Children.Add(polygon);
         }
     }
