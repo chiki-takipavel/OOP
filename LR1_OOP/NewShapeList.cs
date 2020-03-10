@@ -14,7 +14,7 @@ namespace LR1_OOP
 
         public void Draw(Canvas canvas)
         {
-            for (int i = 0; i <= Shapes.Count; i++)
+            for (int i = 0; i < Shapes.Count; i++)
             {
                 Shapes[i].Draw(canvas);
             }
