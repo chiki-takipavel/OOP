@@ -6,15 +6,15 @@
         xmlns:local="clr-namespace:LR1_OOP"
         mc:Ignorable="d"
         Title="Графический редактор" 
+        Name="mainWindow"
         Height="768" 
         MinHeight="620"
         Width="1200" 
         MinWidth="900"
         WindowStyle="SingleBorderWindow" 
-        WindowStartupLocation="CenterScreen" >
-    <Grid
-        Name="gridMain"
-        KeyDown="gridMain_KeyDown">
+        WindowStartupLocation="CenterScreen"
+        KeyDown="mainWindow_KeyDown">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="0.08*" />
