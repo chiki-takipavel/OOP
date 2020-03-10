@@ -3,15 +3,15 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Forms;
 using System.Collections.ObjectModel;
-using System.Windows.Shapes;
 using System.Windows.Input;
+using System.ComponentModel;
 
 namespace LR1_OOP
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private SolidColorBrush brushStroke;
         private SolidColorBrush brushFill;
@@ -20,10 +20,24 @@ namespace LR1_OOP
         private int countPoints;
         private NewShapeList list;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public int CountPoints
         {
             get { return countPoints; }
-            set { countPoints = value; }
+            set 
+            {
+                if (value != countPoints)
+                { 
+                    countPoints = value;
+                    OnPropertyChanged("CountPoints");
+                }
+            }
         }
 
         public MainWindow()
@@ -99,15 +113,15 @@ namespace LR1_OOP
 
         private void cmbShapes_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            CountPoints = 2;
             pointsList.Clear();
             if (cmbShapes.SelectedItem.ToString() == "Многоугольник")
             {
-                txtCountPoints.Text = "3";  
+                CountPoints = 3;
                 panelCountPoints.Visibility = Visibility.Visible;
             }
             else
             {
+                CountPoints = 2;
                 panelCountPoints.Visibility = Visibility.Hidden;
             }
         }
@@ -115,11 +129,6 @@ namespace LR1_OOP
         private void txtCountPoints_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             pointsList.Clear();
-        }
-
-        private void itemExit_Click(object sender, RoutedEventArgs e)
-        {
-            Environment.Exit(0);
         }
 
         private void gridMain_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -132,6 +141,11 @@ namespace LR1_OOP
                     canvasField.Children.RemoveAt(canvasElemCount - 1);
                 }
             }
+        }
+
+        private void itemExit_Click(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }
