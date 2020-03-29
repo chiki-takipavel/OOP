@@ -5,7 +5,7 @@ using System.Windows.Shapes;
 
 namespace LR1_OOP
 {
-    class NewRectangle : NewShape
+    public class NewRectangle : NewShape
     {
         public NewRectangle()
         {
@@ -22,8 +22,8 @@ namespace LR1_OOP
         public override void Draw(Canvas canvas)
         {
             Path path = new Path();
-            path.Stroke = StrokeBrush;
-            path.Fill = FillBrush;
+            path.Stroke = new SolidColorBrush(StrokeColor);
+            path.Fill = new SolidColorBrush(FillColor);
             path.StrokeThickness = StrokeWidth;
             RectangleGeometry rectangle = new RectangleGeometry(new Rect(new Point(Points[0].X, Points[0].Y), new Point(Points[1].X, Points[1].Y)));
             path.Data = rectangle;

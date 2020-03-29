@@ -7,6 +7,9 @@ using System.Windows.Input;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Reflection;
+using System.IO;
+using System.Xml.Serialization;
+using System.Linq;
 
 namespace LR1_OOP
 {
@@ -15,13 +18,18 @@ namespace LR1_OOP
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private SolidColorBrush brushStroke;
-        private SolidColorBrush brushFill;
+        private const string defaultFileName = "Shapes";
+        private const string defaultExtension = ".xml";
+        private const string fileFilter = "XML-файл (.xml)|*.xml|Текстовый файл (.txt)|*.txt";
+        private Color colorStroke;
+        private Color colorFill;
         private double widthStroke;
         private PointCollection pointsList;
         private int countPoints;
         private NewShapeList listShapes;
         private List<Type> listShapesTypes;
+        private Microsoft.Win32.OpenFileDialog openFileDialog;
+        private Microsoft.Win32.SaveFileDialog saveFileDialog;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -33,10 +41,10 @@ namespace LR1_OOP
         public int CountPoints
         {
             get { return countPoints; }
-            set 
+            set
             {
                 if (value != countPoints)
-                { 
+                {
                     countPoints = value;
                     OnPropertyChanged("CountPoints");
                 }
@@ -46,35 +54,47 @@ namespace LR1_OOP
         public MainWindow()
         {
             InitializeComponent();
-            brushStroke = new SolidColorBrush(Colors.Black);
-            brushFill = new SolidColorBrush(Colors.White);
+            colorStroke = Colors.Black;
+            colorFill = Colors.White;
             widthStroke = 7;
             pointsList = new PointCollection();
             countPoints = 2;
             txtCountPoints.DataContext = this;
 
-            ObservableCollection<string> comboItems = new ObservableCollection<string>();
+            ObservableCollection<string> comboItems = new ObservableCollection<string>
+            {
+                "Линия",
+                "Прямоугольник",
+                "Эллипс",
+                "Многоугольник"
+            };
             cmbShapes.ItemsSource = comboItems;
-            comboItems.Add("Линия");
-            comboItems.Add("Прямоугольник");
-            comboItems.Add("Эллипс");
-            comboItems.Add("Многоугольник");
 
             listShapes = new NewShapeList();
-            listShapesTypes = new List<Type>();
-            listShapesTypes.Add(typeof(NewLine));
-            listShapesTypes.Add(typeof(NewRectangle));
-            listShapesTypes.Add(typeof(NewEllipse));
-            listShapesTypes.Add(typeof(NewPolygon));
 
-            /*listShapes.Shapes.Add(new NewLine(widthStroke, brushStroke, brushFill, pointsList));
-            listShapes.Shapes.Add(new NewRectangle(widthStroke, brushStroke, brushFill, pointsList));
-            listShapes.Shapes.Add(new NewEllipse(widthStroke, brushStroke, brushFill, pointsList));
-            listShapes.Shapes.Add(new NewPolygon(widthStroke, brushStroke, brushFill, pointsList));*/
+            listShapesTypes = new List<Type>
+            {
+                typeof(NewLine),
+                typeof(NewRectangle),
+                typeof(NewEllipse),
+                typeof(NewPolygon)
+            };
 
             slidStrWidth.Value = widthStroke;
-            rectStrokeColor.Fill = brushStroke;
-            rectFillColor.Fill = brushFill;
+            rectStrokeColor.Fill = new SolidColorBrush(colorStroke);
+            rectFillColor.Fill = new SolidColorBrush(colorFill);
+
+            openFileDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                DefaultExt = defaultExtension,
+                Filter = fileFilter
+            };
+            saveFileDialog = new Microsoft.Win32.SaveFileDialog
+            {
+                FileName = defaultFileName,
+                DefaultExt = defaultExtension,
+                Filter = fileFilter
+            };
         }
 
         private void btnStrokeColor_Click(object sender, RoutedEventArgs e)
@@ -83,9 +103,8 @@ namespace LR1_OOP
             if (colorPicker.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 System.Drawing.Color color = colorPicker.Color;
-                SolidColorBrush brushColor = new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
-                brushStroke = brushColor;
-                rectStrokeColor.Fill = brushColor;
+                colorStroke = Color.FromArgb(color.A, color.R, color.G, color.B);
+                rectStrokeColor.Fill = new SolidColorBrush(colorStroke);
             }
         }
 
@@ -95,9 +114,8 @@ namespace LR1_OOP
             if (colorPicker.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 System.Drawing.Color color = colorPicker.Color;
-                SolidColorBrush brushColor = new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
-                brushFill = brushColor;
-                rectFillColor.Fill = brushColor;
+                colorFill = Color.FromArgb(color.A, color.R, color.G, color.B);
+                rectFillColor.Fill = new SolidColorBrush(colorFill);
             }
         }
 
@@ -107,18 +125,12 @@ namespace LR1_OOP
             if (pointsList.Count == CountPoints)
             {
                 Type shapeType = listShapesTypes[cmbShapes.SelectedIndex];
-                ConstructorInfo constructorInfo = shapeType.GetConstructor(new Type[] { typeof(double), typeof(SolidColorBrush), 
-                                                                                            typeof(SolidColorBrush), typeof(PointCollection) });
-                object objShape = constructorInfo.Invoke(new object[] { widthStroke, brushStroke, brushFill, pointsList });
+                ConstructorInfo constructorInfo = shapeType.GetConstructor(new Type[] { typeof(double), typeof(Color),
+                                                                                            typeof(Color), typeof(PointCollection) });
+                object objShape = constructorInfo.Invoke(new object[] { widthStroke, colorStroke, colorFill, pointsList });
                 MethodInfo methodInfo = shapeType.GetMethod("Draw");
-                object magicValue = methodInfo.Invoke(objShape, new object[] { canvasField });
-                Convert.ChangeType(objShape, shapeType);
-                listShapes.Shapes.Add((NewShape) objShape);
-                /*listShapes.Shapes[cmbShapes.SelectedIndex].StrokeBrush = brushStroke;
-                listShapes.Shapes[cmbShapes.SelectedIndex].FillBrush = brushFill;
-                listShapes.Shapes[cmbShapes.SelectedIndex].StrokeWidth = widthStroke;
-                listShapes.Shapes[cmbShapes.SelectedIndex].Points = pointsList;
-                listShapes.Shapes[cmbShapes.SelectedIndex].Draw(canvasField);*/
+                methodInfo.Invoke(objShape, new object[] { canvasField });
+                listShapes.Shapes.Add((NewShape)objShape);
                 pointsList.Clear();
             }
         }
@@ -161,6 +173,39 @@ namespace LR1_OOP
                 if (listShapesCount != 0)
                 {
                     listShapes.Shapes.RemoveAt(listShapesCount - 1);
+                }
+            }
+        }
+
+        private void itemSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                XmlSerializer xmlFormatter = new XmlSerializer(typeof(NewShapeList), listShapesTypes.ToArray());
+                using (FileStream file = new FileStream(saveFileDialog.FileName, FileMode.Create))
+                {
+                    xmlFormatter.Serialize(file, listShapes);
+                }
+            }
+        }
+
+        private void itemOpen_Click(object sender, RoutedEventArgs e)
+        {
+            if (openFileDialog.ShowDialog() == true)
+            {
+                XmlSerializer xmlFormatter = new XmlSerializer(typeof(NewShapeList), listShapesTypes.ToArray());
+                using (FileStream file = new FileStream("Shapes.xml", FileMode.Open))
+                {
+                    try
+                    {
+                        NewShapeList tempShapes = xmlFormatter.Deserialize(file) as NewShapeList;
+                        tempShapes.Draw(canvasField);
+                        listShapes.Shapes = listShapes.Shapes.Concat(tempShapes.Shapes).ToList();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        System.Windows.MessageBox.Show("Не удалось десериализовать объект", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
         }

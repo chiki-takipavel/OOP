@@ -24,8 +24,16 @@
             Grid.Row="0" 
             VerticalAlignment="Top">
             <MenuItem Header="Файл">
-                <MenuItem Header="Открыть" IsEnabled="False"/>
-                <MenuItem Header="Сохранить" IsEnabled="False"/>
+                <MenuItem 
+                    Name="itemOpen"
+                    Header="Открыть"
+                    Click="itemOpen_Click">
+                </MenuItem>
+                <MenuItem
+                    Name="itemSave"
+                    Header="Сохранить"
+                    Click="itemSave_Click">
+                </MenuItem>
                 <Separator />
                 <MenuItem 
                     Name="itemExit" 

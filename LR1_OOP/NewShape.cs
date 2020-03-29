@@ -1,69 +1,67 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Xml.Serialization;
 
 namespace LR1_OOP
 {
     public abstract class NewShape
     {
-        private double strokeWidth;
-        private SolidColorBrush strokeBrush;
-        private SolidColorBrush fillBrush;
-        private PointCollection points;
+        public double StrokeWidth { get; set; }
+
+        [XmlIgnore]
+        public Color StrokeColor { get; set; }
+
+        [XmlIgnore]
+        public Color FillColor { get; set; }
+
+        [XmlElement("StrokeColor")]
+        public string StrokeColorString
+        {
+            get { return StrokeColor.ToString(); }
+            set { StrokeColor = (Color)ColorConverter.ConvertFromString(value); }
+        }
+
+        [XmlElement("FillColor")]
+        public string FillColorString
+        {
+            get { return FillColor.ToString(); }
+            set { FillColor = (Color)ColorConverter.ConvertFromString(value); }
+        }
+
+        public PointCollection Points { get; set; }
 
         public NewShape()
         {
-            
+            StrokeWidth = 7;
+            StrokeColor = Colors.Black;
+            FillColor = Colors.White;
         }
 
         public NewShape(double sWidth, Color sColor, Color fColor, PointCollection points)
         {
-            strokeWidth = sWidth;
-            strokeBrush = new SolidColorBrush(sColor);
-            fillBrush = new SolidColorBrush(fColor);
-            PointCollection tempList = new PointCollection();
+            StrokeWidth = sWidth;
+            StrokeColor = sColor;
+            FillColor = fColor;
+            PointCollection tempPoints = new PointCollection();
             foreach (Point point in points)
             {
-                tempList.Add(point);
+                tempPoints.Add(point);
             }
-            this.points = tempList;
+            this.Points = tempPoints;
         }
 
         public NewShape(double sWidth, SolidColorBrush sBrush, SolidColorBrush fBrush, PointCollection points)
         {
-            strokeWidth = sWidth;
-            strokeBrush = sBrush;
-            fillBrush = fBrush;
-            PointCollection tempList = new PointCollection();
+            StrokeWidth = sWidth;
+            StrokeColor = sBrush.Color;
+            FillColor = fBrush.Color;
+            PointCollection tempPoints = new PointCollection();
             foreach (Point point in points)
             {
-                tempList.Add(point);
+                tempPoints.Add(point);
             }
-            this.points = tempList; 
-        }
-
-        public double StrokeWidth
-        {
-            get { return strokeWidth; }
-            set { strokeWidth = value; }
-        }
-
-        public SolidColorBrush StrokeBrush
-        {
-            get { return strokeBrush; }
-            set { strokeBrush = value; }
-        }
-
-        public SolidColorBrush FillBrush
-        {
-            get { return fillBrush; }
-            set { fillBrush = value; }
-        }
-
-        public PointCollection Points
-        {
-            get { return points; }
-            set { points = value; }
+            this.Points = tempPoints;
         }
 
         public abstract void Draw(Canvas canvas);

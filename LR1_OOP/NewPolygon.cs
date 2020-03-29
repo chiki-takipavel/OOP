@@ -1,11 +1,10 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace LR1_OOP
 {
-    class NewPolygon : NewShape
+    public class NewPolygon : NewShape
     {
         public NewPolygon()
         {
@@ -22,8 +21,8 @@ namespace LR1_OOP
         public override void Draw(Canvas canvas)
         {
             Polygon polygon = new Polygon();
-            polygon.Stroke = StrokeBrush;
-            polygon.Fill = FillBrush;
+            polygon.Stroke = new SolidColorBrush(StrokeColor);
+            polygon.Fill = new SolidColorBrush(FillColor);
             polygon.FillRule = FillRule.Nonzero;
             polygon.StrokeThickness = StrokeWidth;
             polygon.Points = Points;

@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -26,8 +25,8 @@ namespace LR1_OOP
             line.Y1 = Points[0].Y;
             line.X2 = Points[1].X;
             line.Y2 = Points[1].Y;
-            line.Stroke = StrokeBrush;
-            line.Fill = FillBrush;
+            line.Stroke = new SolidColorBrush(StrokeColor);
+            line.Fill = new SolidColorBrush(FillColor);
             line.StrokeThickness = StrokeWidth;
             canvas.Children.Add(line);
         }

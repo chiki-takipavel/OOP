@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace LR1_OOP
 {
+    [Serializable]
     public class NewShapeList
     {
         public List<NewShape> Shapes { get; set; }
@@ -16,7 +19,14 @@ namespace LR1_OOP
         {
             for (int i = 0; i < Shapes.Count; i++)
             {
-                Shapes[i].Draw(canvas);
+                try
+                {
+                    Shapes[i].Draw(canvas);
+                }
+                catch
+                {
+                    System.Windows.MessageBox.Show($"Повреждён объект {Shapes[i].GetType().Name}.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
     }
