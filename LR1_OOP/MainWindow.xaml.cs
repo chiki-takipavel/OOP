@@ -194,7 +194,7 @@ namespace LR1_OOP
             if (openFileDialog.ShowDialog() == true)
             {
                 XmlSerializer xmlFormatter = new XmlSerializer(typeof(NewShapeList), listShapesTypes.ToArray());
-                using (FileStream file = new FileStream("Shapes.xml", FileMode.Open))
+                using (FileStream file = new FileStream(openFileDialog.FileName, FileMode.Open))
                 {
                     try
                     {
