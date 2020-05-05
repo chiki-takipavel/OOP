@@ -32,7 +32,7 @@ namespace LR1_OOP
 
         private readonly NewShapeList listShapes;
         private readonly ObservableCollection<NewShapeFactory> listFactory;
-        private readonly List<Type> listShapesTypes;
+        private List<Type> listShapesTypes;
         private readonly List<Type> listFactoryTypes;
 
         private readonly Microsoft.Win32.OpenFileDialog openXmlFileDialog;
@@ -249,9 +249,9 @@ namespace LR1_OOP
                 string filename = openClassFileDialog.FileName;
                 try
                 {
-                    List<Type> list = Assembling.ReflectiveEnumerator.GetEnumerableOfType<NewShapeFactory>(Assembly.LoadFile(filename));
+                    List<Type> newFactoryTypes = Assembling.ReflectiveEnumerator.GetEnumerableOfType<NewShapeFactory>(Assembly.LoadFile(filename));
                     bool isAdded = false;
-                    foreach (Type type in list)
+                    foreach (Type type in newFactoryTypes)
                     {
                         if (!listFactoryTypes.Contains(type))
                         {
@@ -263,6 +263,8 @@ namespace LR1_OOP
                     }
                     if (isAdded)
                     {
+                        List<Type> newShapesTypes = Assembling.ReflectiveEnumerator.GetEnumerableOfType<NewShape>(Assembly.LoadFile(filename));
+                        listShapesTypes.AddRange(newShapesTypes);
                         cmbShapes.SelectedIndex = cmbShapes.Items.Count - 1;
                     }
                 }
