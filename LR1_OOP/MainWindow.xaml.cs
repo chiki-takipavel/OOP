@@ -18,18 +18,26 @@ namespace LR1_OOP
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private const string defaultFileName = "Shapes";
-        private const string defaultExtension = ".xml";
-        private const string fileFilter = "XML-файл (.xml)|*.xml|Текстовый файл (.txt)|*.txt";
+        private const string defaultXmlFileName = "Shapes";
+        private const string defaultXmlExtension = ".xml";
+        private const string fileXmlFilter = "XML-файл (.xml)|*.xml";
+        private const string defaultDllExtension = ".dll";
+        private const string fileDllFilter = "DLL-файл (.dll)|*.dll";
+
         private Color colorStroke;
         private Color colorFill;
         private double widthStroke;
-        private PointCollection pointsList;
-        private int countPoints;
-        private NewShapeList listShapes;
-        private List<Type> listShapesTypes;
-        private Microsoft.Win32.OpenFileDialog openFileDialog;
-        private Microsoft.Win32.SaveFileDialog saveFileDialog;
+        private readonly PointCollection pointsList;
+        private int pointsCount;
+
+        private readonly NewShapeList listShapes;
+        private readonly ObservableCollection<NewShapeFactory> listFactory;
+        private readonly List<Type> listShapesTypes;
+        private readonly List<Type> listFactoryTypes;
+
+        private readonly Microsoft.Win32.OpenFileDialog openXmlFileDialog;
+        private readonly Microsoft.Win32.OpenFileDialog openClassFileDialog;
+        private readonly Microsoft.Win32.SaveFileDialog saveXmlFileDialog;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -38,65 +46,69 @@ namespace LR1_OOP
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public int CountPoints
+        public int PointsCount
         {
-            get { return countPoints; }
+            get { return pointsCount; }
             set
             {
-                if (value != countPoints)
+                if (value != pointsCount)
                 {
-                    countPoints = value;
-                    OnPropertyChanged("CountPoints");
+                    pointsCount = value;
+                    OnPropertyChanged("PointsCount");
                 }
             }
         }
 
+        /// <summary>
+        /// Инициализация окна
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
             colorStroke = Colors.Black;
             colorFill = Colors.White;
             widthStroke = 7;
+            txtPointsCount.DataContext = this;
             pointsList = new PointCollection();
-            countPoints = 2;
-            txtCountPoints.DataContext = this;
-
-            ObservableCollection<string> comboItems = new ObservableCollection<string>
-            {
-                "Линия",
-                "Прямоугольник",
-                "Эллипс",
-                "Многоугольник"
-            };
-            cmbShapes.ItemsSource = comboItems;
 
             listShapes = new NewShapeList();
+            listShapesTypes = new List<Type>(Assembling.ReflectiveEnumerator.GetEnumerableOfType<NewShape>(Assembly.GetExecutingAssembly()));
 
-            listShapesTypes = new List<Type>
+            listFactoryTypes = new List<Type>(Assembling.ReflectiveEnumerator.GetEnumerableOfType<NewShapeFactory>(Assembly.GetExecutingAssembly()));
+            listFactory = new ObservableCollection<NewShapeFactory>();
+            foreach (Type type in listFactoryTypes)
             {
-                typeof(NewLine),
-                typeof(NewRectangle),
-                typeof(NewEllipse),
-                typeof(NewPolygon)
-            };
+                NewShapeFactory shape = (NewShapeFactory)type.GetConstructor(new Type[] { }).Invoke(new object[] { });
+                listFactory.Add(shape);
+            }
+            cmbShapes.ItemsSource = listFactory;
+            cmbShapes.DisplayMemberPath = "ShapeName";
 
             slidStrWidth.Value = widthStroke;
             rectStrokeColor.Fill = new SolidColorBrush(colorStroke);
             rectFillColor.Fill = new SolidColorBrush(colorFill);
 
-            openFileDialog = new Microsoft.Win32.OpenFileDialog
+            openXmlFileDialog = new Microsoft.Win32.OpenFileDialog
             {
-                DefaultExt = defaultExtension,
-                Filter = fileFilter
+                DefaultExt = defaultXmlExtension,
+                Filter = fileXmlFilter
             };
-            saveFileDialog = new Microsoft.Win32.SaveFileDialog
+            saveXmlFileDialog = new Microsoft.Win32.SaveFileDialog
             {
-                FileName = defaultFileName,
-                DefaultExt = defaultExtension,
-                Filter = fileFilter
+                FileName = defaultXmlFileName,
+                DefaultExt = defaultXmlExtension,
+                Filter = fileXmlFilter
+            };
+            openClassFileDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                DefaultExt = defaultDllExtension,
+                Filter = fileDllFilter
             };
         }
 
+        /// <summary>
+        /// Нажатие на кнопку выбора цвета контура
+        /// </summary>
         private void btnStrokeColor_Click(object sender, RoutedEventArgs e)
         {
             ColorDialog colorPicker = new ColorDialog();
@@ -108,6 +120,9 @@ namespace LR1_OOP
             }
         }
 
+        /// <summary>
+        /// Нажатие на кнопку выбора цвета заливки
+        /// </summary>
         private void btnFillColor_Click(object sender, RoutedEventArgs e)
         {
             ColorDialog colorPicker = new ColorDialog();
@@ -119,47 +134,59 @@ namespace LR1_OOP
             }
         }
 
+        /// <summary>
+        /// Нажатие левой кнопки мыши по канвасу для отрисовки фигур
+        /// </summary>
         private void canvasField_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             pointsList.Add(e.GetPosition(canvasField));
-            if (pointsList.Count == CountPoints)
+            if (pointsList.Count == PointsCount)
             {
-                Type shapeType = listShapesTypes[cmbShapes.SelectedIndex];
-                ConstructorInfo constructorInfo = shapeType.GetConstructor(new Type[] { typeof(double), typeof(Color),
-                                                                                            typeof(Color), typeof(PointCollection) });
-                object objShape = constructorInfo.Invoke(new object[] { widthStroke, colorStroke, colorFill, pointsList });
-                MethodInfo methodInfo = shapeType.GetMethod("Draw");
-                methodInfo.Invoke(objShape, new object[] { canvasField });
-                listShapes.Shapes.Add((NewShape)objShape);
+                NewShapeFactory tempShape = (NewShapeFactory)cmbShapes.SelectedValue;
+                NewShape shape = tempShape.Create(widthStroke, colorStroke, colorFill, pointsList);
+                shape.Draw(canvasField);
+                listShapes.Shapes.Add(shape);
                 pointsList.Clear();
             }
         }
 
+        /// <summary>
+        /// Изменение значения толщины контура
+        /// </summary>
         private void slidStrWidth_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             widthStroke = slidStrWidth.Value;
         }
 
+        /// <summary>
+        /// Выбор фигуры в ComboBox
+        /// </summary>
         private void cmbShapes_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             pointsList.Clear();
-            if (cmbShapes.SelectedItem.ToString() == "Многоугольник")
+            NewShapeFactory currentShape = (NewShapeFactory)cmbShapes.SelectedValue;
+            PointsCount = currentShape.PointsCount;
+            if (currentShape.IsChangeablePoints)
             {
-                CountPoints = 3;
                 panelCountPoints.Visibility = Visibility.Visible;
             }
             else
             {
-                CountPoints = 2;
                 panelCountPoints.Visibility = Visibility.Hidden;
             }
         }
 
-        private void txtCountPoints_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        /// <summary>
+        /// Изменение значения в поле количества точек
+        /// </summary>
+        private void txtPointsCount_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             pointsList.Clear();
         }
 
+        /// <summary>
+        /// Удаление последней нарисованной фигуры при нажатии Ctrl+Z
+        /// </summary>
         private void mainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control) && (e.Key == Key.Z))
@@ -177,39 +204,78 @@ namespace LR1_OOP
             }
         }
 
-        private void itemSave_Click(object sender, RoutedEventArgs e)
-        {
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                XmlSerializer xmlFormatter = new XmlSerializer(typeof(NewShapeList), listShapesTypes.ToArray());
-                using (FileStream file = new FileStream(saveFileDialog.FileName, FileMode.Create))
-                {
-                    xmlFormatter.Serialize(file, listShapes);
-                }
-            }
-        }
-
+        /// <summary>
+        /// Открытие файла с сериализованными фигурами
+        /// </summary>
         private void itemOpen_Click(object sender, RoutedEventArgs e)
         {
-            if (openFileDialog.ShowDialog() == true)
+            if (openXmlFileDialog.ShowDialog() == true)
             {
                 XmlSerializer xmlFormatter = new XmlSerializer(typeof(NewShapeList), listShapesTypes.ToArray());
-                using (FileStream file = new FileStream(openFileDialog.FileName, FileMode.Open))
+                using FileStream file = new FileStream(openXmlFileDialog.FileName, FileMode.Open);
+                try
                 {
-                    try
-                    {
-                        NewShapeList tempShapes = xmlFormatter.Deserialize(file) as NewShapeList;
-                        tempShapes.Draw(canvasField);
-                        listShapes.Shapes = listShapes.Shapes.Concat(tempShapes.Shapes).ToList();
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        System.Windows.MessageBox.Show("Не удалось десериализовать объект", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    NewShapeList tempShapes = xmlFormatter.Deserialize(file) as NewShapeList;
+                    tempShapes.Draw(canvasField);
+                    listShapes.Shapes = listShapes.Shapes.Concat(tempShapes.Shapes).ToList();
+                }
+                catch (InvalidOperationException)
+                {
+                    System.Windows.MessageBox.Show("Не удалось десериализовать объект", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
 
+        /// <summary>
+        /// Сохранение сериализованных фигур
+        /// </summary>
+        private void itemSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (saveXmlFileDialog.ShowDialog() == true)
+            {
+                XmlSerializer xmlFormatter = new XmlSerializer(typeof(NewShapeList), listShapesTypes.ToArray());
+                using FileStream file = new FileStream(saveXmlFileDialog.FileName, FileMode.Create);
+                xmlFormatter.Serialize(file, listShapes);
+            }
+        }
+
+        /// <summary>
+        /// Добавление новых фигур
+        /// </summary>
+        private void itemAddShapes_Click(object sender, RoutedEventArgs e)
+        {
+            if (openClassFileDialog.ShowDialog() == true)
+            {
+                string filename = openClassFileDialog.FileName;
+                try
+                {
+                    List<Type> list = Assembling.ReflectiveEnumerator.GetEnumerableOfType<NewShapeFactory>(Assembly.LoadFile(filename));
+                    bool isAdded = false;
+                    foreach (Type type in list)
+                    {
+                        if (!listFactoryTypes.Contains(type))
+                        {
+                            NewShapeFactory shape = (NewShapeFactory)type.GetConstructor(new Type[] { }).Invoke(new object[] { });
+                            listFactory.Add(shape);
+                            listFactoryTypes.Add(type);
+                            isAdded = true;
+                        }
+                    }
+                    if (isAdded)
+                    {
+                        cmbShapes.SelectedIndex = cmbShapes.Items.Count - 1;
+                    }
+                }
+                catch
+                {
+                    System.Windows.MessageBox.Show("Ошибка загрузки", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Выход из приложения
+        /// </summary>
         private void itemExit_Click(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);

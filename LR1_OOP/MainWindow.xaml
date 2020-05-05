@@ -35,6 +35,12 @@
                     Click="itemSave_Click">
                 </MenuItem>
                 <Separator />
+                <MenuItem
+                    Name="itemAddShape"
+                    Header="Добавить фигуру"
+                    Click="itemAddShapes_Click">
+                </MenuItem>
+                <Separator />
                 <MenuItem 
                     Name="itemExit" 
                     Header="Выход" 
@@ -140,16 +146,16 @@
                     VerticalAlignment="Center"
                     Margin="16,0,0,0"/>
                 <TextBox 
-                    Name="txtCountPoints"
+                    Name="txtPointsCount"
                     TextWrapping="NoWrap"
                     Margin="8,0,0,0" 
                     TextAlignment="Right" 
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Width="25"
-                    TextChanged="txtCountPoints_TextChanged">
+                    TextChanged="txtPointsCount_TextChanged">
                     <TextBox.Text>
-                        <Binding Path="CountPoints" ValidatesOnExceptions="True" UpdateSourceTrigger="PropertyChanged" >
+                        <Binding Path="PointsCount" ValidatesOnExceptions="True" UpdateSourceTrigger="PropertyChanged" >
                             <Binding.ValidationRules>
                                 <local:RangeValidationRule MinValue="3" MaxValue="20" />
                             </Binding.ValidationRules>

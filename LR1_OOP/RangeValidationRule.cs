@@ -11,11 +11,9 @@ namespace LR1_OOP
         public override ValidationResult Validate(
           object value, System.Globalization.CultureInfo cultureInfo)
         {
-            int intValue;
-
             string text = String.Format("Должно быть между {0} и {1}",
                            MinValue, MaxValue);
-            if (!Int32.TryParse(value.ToString(), out intValue))
+            if (!Int32.TryParse(value.ToString(), out int intValue))
                 return new ValidationResult(false, "Не целое число");
             if (intValue < MinValue)
                 return new ValidationResult(false, "Слишком маленькое. " + text);
