@@ -21,15 +21,15 @@ namespace LR1_OOP
 
         public override void Draw(Canvas canvas)
         {
-            Path path = new Path();
-            path.Stroke = new SolidColorBrush(StrokeColor);
-            path.Fill = new SolidColorBrush(FillColor);
-            path.StrokeThickness = StrokeWidth;
+            Path path = new Path
+            {
+                Stroke = new SolidColorBrush(StrokeColor),
+                Fill = new SolidColorBrush(FillColor),
+                StrokeThickness = StrokeWidth
+            };
             RectangleGeometry rectangle = new RectangleGeometry(new Rect(new Point(Points[0].X, Points[0].Y), new Point(Points[1].X, Points[1].Y)));
             path.Data = rectangle;
             canvas.Children.Add(path);
         }
-
     }
-
 }

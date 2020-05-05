@@ -20,12 +20,14 @@ namespace LR1_OOP
 
         public override void Draw(Canvas canvas)
         {
-            Polygon polygon = new Polygon();
-            polygon.Stroke = new SolidColorBrush(StrokeColor);
-            polygon.Fill = new SolidColorBrush(FillColor);
-            polygon.FillRule = FillRule.Nonzero;
-            polygon.StrokeThickness = StrokeWidth;
-            polygon.Points = Points;
+            Polygon polygon = new Polygon
+            {
+                Stroke = new SolidColorBrush(StrokeColor),
+                Fill = new SolidColorBrush(FillColor),
+                FillRule = FillRule.Nonzero,
+                StrokeThickness = StrokeWidth,
+                Points = Points
+            };
             canvas.Children.Add(polygon);
         }
     }

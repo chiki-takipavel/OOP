@@ -20,16 +20,17 @@ namespace LR1_OOP
 
         public override void Draw(Canvas canvas)
         {
-            Line line = new Line();
-            line.X1 = Points[0].X;
-            line.Y1 = Points[0].Y;
-            line.X2 = Points[1].X;
-            line.Y2 = Points[1].Y;
-            line.Stroke = new SolidColorBrush(StrokeColor);
-            line.Fill = new SolidColorBrush(FillColor);
-            line.StrokeThickness = StrokeWidth;
+            Line line = new Line
+            {
+                X1 = Points[0].X,
+                Y1 = Points[0].Y,
+                X2 = Points[1].X,
+                Y2 = Points[1].Y,
+                Stroke = new SolidColorBrush(StrokeColor),
+                Fill = new SolidColorBrush(FillColor),
+                StrokeThickness = StrokeWidth
+            };
             canvas.Children.Add(line);
         }
-
     }
 }
