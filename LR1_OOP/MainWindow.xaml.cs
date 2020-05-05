@@ -142,8 +142,8 @@ namespace LR1_OOP
             pointsList.Add(e.GetPosition(canvasField));
             if (pointsList.Count == PointsCount)
             {
-                NewShapeFactory tempShape = (NewShapeFactory)cmbShapes.SelectedValue;
-                NewShape shape = tempShape.Create(widthStroke, colorStroke, colorFill, pointsList);
+                NewShapeFactory currentShape = (NewShapeFactory)cmbShapes.SelectedValue;
+                NewShape shape = currentShape.Create(widthStroke, colorStroke, colorFill, pointsList);
                 shape.Draw(canvasField);
                 listShapes.Shapes.Add(shape);
                 pointsList.Clear();
